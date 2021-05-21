@@ -1,0 +1,25 @@
+version: '3.4'
+
+services:
+  httpd:
+    image: nouchka/sqlite3
+    volumes:
+      - ../backend:/bin/backend:ro
+      - ../assets/backend.db:/var/lib/backend/backend.db
+      - ../web:/usr/share/web:ro
+    networks:
+      - net
+    expose:
+      - "8080"
+    environment:
+      - VIRTUAL_HOST=backend.byteporter.com
+      - VIRTUAL_PORT=8080
+      - LETSENCRYPT_HOST=backend.byteporter.com
+      - LETSENCRYPT_EMAIL=webmaster@byteporter.com
+    entrypoint: ["/bin/backend"]
+    restart: always
+
+networks:
+  net:
+    external:
+      name: docker-reverse-proxy_net
