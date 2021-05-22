@@ -1,13 +1,16 @@
 package handler
 
 import(
+    "log"
+    //"strings"
+    "html/template"
     "net/http"
     "path/filepath"
     //_ "github.com/mattn/go-sqlite3"
     //"database/sql"
 )
 
-type MessangeHandler struct {
+type MessageHandler struct {
     DBPath string
     TemplateRootPath string
 }

@@ -1,27 +1,37 @@
 package main
 
 import (
+    "internal/pkg/handler"
+
     "log"
     "strings"
     "net/http"
+
     "github.com/gorilla/mux"
-    "internal/pkg/handler"
 )
 
 func main() {
     mh := handler.MessageHandler {
-        "/usr/share/messagedata"
-        "/usr/share/web" 
+        "/usr/share/messagedata",
+        "/usr/share/web",
     }
 
     apiPrefix := "/api"
     router := mux.NewRouter()
     apiRouter := router.PathPrefix(apiPrefix).Subrouter()
 
-    apiRouter.HandleFunc("/", 
+    apiRouter.HandleFunc("/", mh.GetDefault).Methods("GET")
 
-    http.Handle("/", apiRouter);
+    http.Handle("/", apiRouter)
 
-    defer log.Println("*** INFO: Backend API started.");
-    log.Fatal(http.ListenAndServe(strings.Join([]string{":", "8080"}, ""), router));
+    log.Println("*** INFO: Available Routes")
+    router.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
+        t, err := route.GetPathTemplate()
+        if err != nil {
+            return err
+        }
+        log.Println("*** INFO: " + t)
+        return nil
+    })
+    log.Fatal(http.ListenAndServe(strings.Join([]string{":", "8080"}, ""), router))
 }
