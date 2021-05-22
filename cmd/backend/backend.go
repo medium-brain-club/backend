@@ -11,16 +11,13 @@ import (
 )
 
 func main() {
-    mh := handler.MessageHandler {
-        "/usr/share/messagedata",
-        "/usr/share/web",
-    }
+    // mh := handler.MessageHandler {} 
 
     apiPrefix := "/api"
     router := mux.NewRouter()
     apiRouter := router.PathPrefix(apiPrefix).Subrouter()
 
-    apiRouter.HandleFunc("/", mh.GetDefault).Methods("GET")
+    apiRouter.HandleFunc("/", handler.GetDefault).Methods("GET")
 
     http.Handle("/", apiRouter)
 

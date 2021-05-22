@@ -5,18 +5,17 @@ import(
     //"strings"
     "html/template"
     "net/http"
-    "path/filepath"
     //_ "github.com/mattn/go-sqlite3"
     //"database/sql"
 )
 
-type MessageHandler struct {
+type BackendHandler struct {
     DBPath string
     TemplateRootPath string
 }
 
-func (mh MessageHandler) GetDefault(w http.ResponseWriter, req *http.Request) {
-    templatePath := filepath.Join(mh.TemplateRootPath, "index.html")
+func GetDefault(w http.ResponseWriter, req *http.Request) {
+    templatePath := "web/index.html"
     t, err := template.ParseFiles(templatePath)
     if err != nil {
         log.Println(err)
