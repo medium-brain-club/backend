@@ -5,14 +5,12 @@ name: default
 
 steps:
   - name: build-backend
-    image: golang
+    image: docker.byteporter.com/backend/build-env
     commands:
-      - make backend
+      - make
 
-  - name: build-database
-    image: nouchka/sqlite3
-    commands:
-      - make assets/backend.db
+image_pull_secrets:
+  - dockerconfigjson
 
 trigger:
   event:

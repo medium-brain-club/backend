@@ -9,9 +9,8 @@ import(
     //"database/sql"
 )
 
-type BackendHandler struct {
+type MessageHandler struct {
     DBPath string
-    TemplateRootPath string
 }
 
 func GetDefault(w http.ResponseWriter, req *http.Request) {

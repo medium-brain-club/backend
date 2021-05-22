@@ -5,7 +5,7 @@ services:
     image: nouchka/sqlite3
     volumes:
       - ../backend:/bin/backend:ro
-      - ../assets/backend.db:/var/lib/backend/backend.db
+      - ../assets/backend.db:/usr/share/messagedata
       - ../web:/usr/share/web:ro
     networks:
       - net
