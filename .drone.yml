@@ -1,0 +1,21 @@
+---
+kind: pipeline
+type: docker
+name: default
+
+steps:
+  - name: build-backend
+    image: golang
+    commands:
+      - make backend
+
+  - name: build-database
+    image: nouchka/sqlite3
+    commands:
+      - make assets/backend.db
+
+trigger:
+  event:
+    - push
+  branch:
+    - master
