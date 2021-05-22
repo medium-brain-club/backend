@@ -11,13 +11,16 @@ import (
 )
 
 func main() {
-    // mh := handler.MessageHandler {} 
+    mh := handler.MessageHandler {
+        "assets/backend.db",
+    } 
 
     apiPrefix := "/api"
     router := mux.NewRouter()
     apiRouter := router.PathPrefix(apiPrefix).Subrouter()
 
     apiRouter.HandleFunc("/", handler.GetDefault).Methods("GET")
+    apiRouter.HandleFunc("/message", mh.GetMessage).Methods("GET")
 
     http.Handle("/", apiRouter)
 
