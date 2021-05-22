@@ -4,9 +4,9 @@ services:
   httpd:
     image: nouchka/sqlite3
     volumes:
-      - ../backend:/bin/backend:ro
-      - ../assets/backend.db:/usr/share/messagedata
-      - ../web:/usr/share/web:ro
+      - ../backend:/usr/share/backend/backend:ro
+      - ../assets/backend.db:/usr/share/backend/assets/backend.db:rw
+      - ../web:/usr/share/backebd/web:ro
     networks:
       - net
     expose:
