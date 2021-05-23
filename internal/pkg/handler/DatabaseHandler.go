@@ -15,8 +15,8 @@ type DatabaseHandler struct {
     DBPath string
 }
 
-func (mh DatabaseHandler) GetMessages(w http.ResponseWriter, req *http.Request) {
-    var messages = mh.readMessages()
+func (dbh DatabaseHandler) GetMessages(w http.ResponseWriter, req *http.Request) {
+    var messages = dbh.readMessages()
 
     messagesJson, err := json.Marshal(messages)
     if err != nil {
@@ -106,8 +106,39 @@ func (dbh DatabaseHandler) GetTags(w http.ResponseWriter, req *http.Request) {
     }
 
     w.Header().Set("Content-Type", "application/json")
-    w.Header().Set("Access-Control-Allow-Origin: *")
     fmt.Fprint(w, string(tagsJson))
+}
+
+func (dbh DatabaseHandler) PostTags(w http.ResponseWriter, req *http.Request) {
+    var tags []struct {
+        Name string 
+    }
+
+    err := json.NewDecoder(req.Body).Decode(&tags)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    log.Printf("*** DEBUG POSTing new Tag entities with data:\n%#v\n", tags)
+
+    db, err := sql.Open("sqlite3", dbh.DBPath)
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer db.Close()
+
+    // TODO: Check for existance of tags with matching names in the database
+    //       and return an error if there is a conflict.
+
+    for i := 0; i < len(tags); i++ {
+        log.Printf("*** DEBUG POST Query:\nINSERT INTO Tag (Name) VALUES ( '%s' );\n", tags[i].Name)
+        _, err := db.Exec("INSERT INTO Tag (Name) VALUES ( ? );", tags[i].Name)
+        if err != nil {
+            log.Fatal(err)
+        }
+    }
+
+    dbh.GetTags(w, req)
 }
 
 type TagRow struct {

@@ -10,6 +10,13 @@ import (
     "github.com/gorilla/mux"
 )
 
+func headersMiddleware(next http.Handler) http.Handler {
+    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+        w.Header().Set("Access-Control-Allow-Origin", "*")
+        next.ServeHTTP(w, r)
+    })
+}
+
 func main() {
     dbh := handler.DatabaseHandler {
         "assets/backend.db",
@@ -17,11 +24,12 @@ func main() {
 
     apiPrefix := "/api"
     router := mux.NewRouter()
+    router.HandleFunc("/", handler.GetDefault).Methods("GET")
     apiRouter := router.PathPrefix(apiPrefix).Subrouter()
-
-    apiRouter.HandleFunc("/", handler.GetDefault).Methods("GET")
     apiRouter.HandleFunc("/messages", dbh.GetMessages).Methods("GET")
     apiRouter.HandleFunc("/tags", dbh.GetTags).Methods("GET")
+    apiRouter.HandleFunc("/tags", dbh.PostTags).Methods("POST")
+    apiRouter.Use(headersMiddleware)
 
     http.Handle("/", apiRouter)
 
