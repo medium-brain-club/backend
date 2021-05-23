@@ -13,3 +13,22 @@ INSERT INTO Tag (Name) VALUES ('LGBTQ+ Self-Care');
 INSERT INTO Tag (Name) VALUES ('Mental Health Awareness Month');
 INSERT INTO Tag (Name) VALUES ('Mental Illness') ; 
 INSERT INTO Tag (Name) VALUES('Mindfulness'); 
+
+INSERT INTO Interaction (Name) VALUES ('Like');
+INSERT INTO Interaction (Name) VALUES ('Support');
+INSERT INTO Interaction (Name) VALUES ('Love');
+INSERT INTO Interaction (Name) VALUES ('Viewed');
+
+INSERT INTO Message (Uuid, Title, Body) VALUES ('cec18c0e-fd0f-4e93-bb6b-a0183a6b2885', 'An excellent post', 'This is the best post I ever saw. So read it!');
+INSERT INTO Message (Uuid, Title, Body) VALUES ('b7f0433e-8564-443a-bda2-3e4df1bd910c', 'This post is OK', 'Another fine post if I ever saw one. Check it out!');
+INSERT INTO Message (Uuid, Title, Body) VALUES ('576e4d20-00c7-4432-bb1d-597aba161014', 'Just a post', 'You may think there is something special about this post, but it is just a post.');
+
+INSERT INTO MessageToTag(MessageUuid, TagId) VALUES ('cec18c0e-fd0f-4e93-bb6b-a0183a6b2885', 3);
+INSERT INTO MessageToTag(MessageUuid, TagId) VALUES ('cec18c0e-fd0f-4e93-bb6b-a0183a6b2885', 11);
+INSERT INTO MessageToTag(MessageUuid, TagId) VALUES ('cec18c0e-fd0f-4e93-bb6b-a0183a6b2885', 5);
+INSERT INTO MessageToTag(MessageUuid, TagId) VALUES ('b7f0433e-8564-443a-bda2-3e4df1bd910c', 1);
+INSERT INTO MessageToTag(MessageUuid, TagId) VALUES ('b7f0433e-8564-443a-bda2-3e4df1bd910c', 5);
+INSERT INTO MessageToTag(MessageUuid, TagId) VALUES ('b7f0433e-8564-443a-bda2-3e4df1bd910c', 7);
+INSERT INTO MessageToTag(MessageUuid, TagId) VALUES ('576e4d20-00c7-4432-bb1d-597aba161014', 5);
+INSERT INTO MessageToTag(MessageUuid, TagId) VALUES ('576e4d20-00c7-4432-bb1d-597aba161014', 9);
+INSERT INTO MessageToTag(MessageUuid, TagId) VALUES ('576e4d20-00c7-4432-bb1d-597aba161014', 8);

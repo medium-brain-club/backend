@@ -25,4 +25,21 @@ CREATE TABLE IF NOT EXISTS MessageToTag (
     FOREIGN KEY (MessageUuid) REFERENCES Message (Uuid),
     FOREIGN KEY (TagId) REFERENCES Tag (Id)
 );
+
+CREATE TABLE IF NOT EXISTS Interaction (
+    Id INTEGER PRIMARY KEY,
+    Name TEXT NOT NULL,
+    Created_at INTEGER(4) NOT NULL DEFAULT (strftime('%s', 'now')),
+    Deleted_at INTEGER(4) NULL
+);
+
+CREATE TABLE IF NOT EXISTS MessageToInteraction (
+    MessageUuid TEXT NOT NULL,
+    InteractionId INTEGER NOT NULL,
+    Created_at INTEGER(4) NOT NULL DEFAULT (strftime('%s', 'now')),
+    Deleted_at INTEGER(4) NULL,
+    PRIMARY KEY (MessageUuid, InteractionId),
+    FOREIGN KEY (MessageUuid) REFERENCES Message (Uuid),
+    FOREIGN KEY (InteractionId) REFERENCES Interaction (Id)
+);
 eof

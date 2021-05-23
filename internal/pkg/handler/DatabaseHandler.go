@@ -2,7 +2,7 @@ package handler
 
 import(
     "log"
-    //"strings"
+    "strings"
     "fmt"
     "net/http"
     "encoding/json"
@@ -15,8 +15,68 @@ type DatabaseHandler struct {
     DBPath string
 }
 
+type MessageRow struct {
+    UUID                string
+    Title               *string
+    Body                string
+    CreatedAt           int
+    Tags                []string
+    LikeCount           int
+    SupportCount        int
+    LoveCount           int
+    InteractionCount    int
+}
+
 func (dbh DatabaseHandler) GetMessages(w http.ResponseWriter, req *http.Request) {
-    var messages = dbh.readMessages()
+    var messages []MessageRow
+    
+    db, err := sql.Open("sqlite3", dbh.DBPath)
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer db.Close()
+
+    rows, err := db.Query(`
+    SELECT 
+        m.Uuid
+        , m.Title
+        , m.Body
+        , m.Created_at
+        , GROUP_CONCAT(t.Name) AS TagsList
+    FROM
+        Message m
+    JOIN
+        MessageToTag mtt ON m.Uuid = mtt.MessageUuid
+    JOIN
+        Tag t ON mtt.TagId = t.Id
+    WHERE 
+        m.deleted_at IS NULL AND t.deleted_at IS NULL
+    GROUP BY
+        m.Uuid
+    ;`)
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer rows.Close()
+
+    for rows.Next() {
+        var message MessageRow
+        var tagsList string
+
+        err = rows.Scan(&message.UUID, &message.Title, &message.Body, &message.CreatedAt, &tagsList)
+        if err != nil {
+            log.Fatal(err)
+        }
+
+        message.Tags = strings.Split(tagsList, ",")
+
+        messages = append(messages, message)
+    }
+
+    err = rows.Err()
+    if err != nil {
+        log.Fatal(err)
+    }
 
     messagesJson, err := json.Marshal(messages)
     if err != nil {
@@ -27,50 +87,21 @@ func (dbh DatabaseHandler) GetMessages(w http.ResponseWriter, req *http.Request)
     fmt.Fprint(w, string(messagesJson))
 }
 
-type MessageRow struct {
-    UUID        string
-    Title       *string
-    Body        string
+// ##################
+// # BEGIN Tag
+// ##################
+type TagRow struct {
+    ID          int
+    Name        string
     CreatedAt   int
 }
 
-func (mh DatabaseHandler) readMessages() ([]MessageRow) {
-    var messages []MessageRow
-
-    db, err := sql.Open("sqlite3", mh.DBPath)
-    if err != nil {
-        log.Fatal(err)
-    }
-    defer db.Close()
-
-    rows, err := db.Query("SELECT uuid, body, created_at FROM message WHERE deleted_at IS NULL;")
-    if err != nil {
-        log.Fatal(err)
-    }
-    defer rows.Close()
-    for rows.Next() {
-        var row MessageRow
-        
-        err = rows.Scan(&row.UUID, &row.Title, &row.Body, &row.CreatedAt)
-        if err != nil {
-            log.Fatal(err)
-        }
-        messages = append(messages, row)
-    }
-    err = rows.Err()
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    return messages
-}
-
-func (dbh DatabaseHandler) readTags() ([]TagRow) {
+func (dbh DatabaseHandler) GetTags(w http.ResponseWriter, req *http.Request) {
     var tags []TagRow
 
     db, err := sql.Open("sqlite3", dbh.DBPath)
     if err != nil {
-        log.Fatal(err)
+        log.Fatal(nil)
     }
     defer db.Close()
 
@@ -79,26 +110,16 @@ func (dbh DatabaseHandler) readTags() ([]TagRow) {
         log.Fatal(err)
     }
     defer rows.Close()
+    
     for rows.Next() {
-        var row TagRow
+        var tag TagRow
 
-        err = rows.Scan(&row.ID, &row.Name, &row.CreatedAt)
+        err = rows.Scan(&tag.ID, &tag.Name, &tag.CreatedAt)
         if err != nil {
             log.Fatal(err)
         }
-        tags = append(tags, row)
+        tags = append(tags, tag)
     }
-
-    err = rows.Err()
-    if err != nil {
-        log.Fatal(err)
-    }
-
-    return tags
-}
-
-func (dbh DatabaseHandler) GetTags(w http.ResponseWriter, req *http.Request) {
-    var tags = dbh.readTags()
 
     tagsJson, err := json.Marshal(tags)
     if err != nil {
@@ -139,10 +160,4 @@ func (dbh DatabaseHandler) PostTags(w http.ResponseWriter, req *http.Request) {
     }
 
     dbh.GetTags(w, req)
-}
-
-type TagRow struct {
-    ID          int
-    Name        string
-    CreatedAt   int
 }
