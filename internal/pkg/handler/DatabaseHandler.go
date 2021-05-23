@@ -106,6 +106,7 @@ func (dbh DatabaseHandler) GetTags(w http.ResponseWriter, req *http.Request) {
     }
 
     w.Header().Set("Content-Type", "application/json")
+    w.Header().Set("Access-Control-Allow-Origin: *")
     fmt.Fprint(w, string(tagsJson))
 }
 
