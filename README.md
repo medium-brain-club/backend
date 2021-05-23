@@ -12,3 +12,4 @@ This is the CRUD API for storing data for the mental health hackathon project.
 
 - /api/messages
     - GET: `curl -v -w'\n' -s https://backend.byteporter.com/api/messages`
+    - POST: `curl -v -w'\n' -s -X POST -d '[ { "Title": "A post title", "Body": "A pody body" } ]' https://backend.byteporter.com/api/messages`
