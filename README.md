@@ -4,18 +4,9 @@
 
 This is the CRUD API for storing data for the mental health hackathon project.
 
-# Resources
+## Resources
 
-## /api/tags
+- /api/tags
+    - GET: `curl -v -w'\n' -s https://backend.byteporter.com/api/tags`
+    - POST: `curl -v -w'\n' -s -X POST -d '[ { "Name": "Tag1" }, { "Name": "Tag2" } ]' https://backend.byteporter.com/api/tags`
 
-This is the collection og Tag entities in the database.
-
-### Methods
-
-#### GET
-
-`curl -v -w'\n' -s https://backend.byteporter.com/api/tags`
-
-#### POST
-
-`curl -v -w'\n' -s -X POST -d '[ { "Name": "Tag1" }, { "Name": "Tag2" } ]' https://backend.byteporter.com/api/tags`
