@@ -7,6 +7,8 @@ import(
     "net/http"
     "encoding/json"
 
+    "github.com/google/uuid"
+
     _ "github.com/mattn/go-sqlite3"
     "database/sql"
 )
@@ -42,7 +44,7 @@ func (dbh DatabaseHandler) GetMessages(w http.ResponseWriter, req *http.Request)
             , m.Title
             , m.Body
             , m.Created_at
-            , (SELECT GROUP_CONCAT(t.Name) FROM Tag t JOIN MessageToTag mtt ON t.Id = mtt.TagId WHERE mtt.MessageUuid = m.Uuid) AS TagsList
+            , COALESCE((SELECT GROUP_CONCAT(t.Name) FROM Tag t JOIN MessageToTag mtt ON t.Id = mtt.TagId WHERE mtt.MessageUuid = m.Uuid), '') AS TagsList
             , (SELECT COUNT(i.Id) FROM Interaction i JOIN MessageToInteraction mti ON i.Id = mti.InteractionId WHERE mti.MessageUuid = m.Uuid AND i.Id = 1) AS LikeCount
             , (SELECT COUNT(i.Id) FROM Interaction i JOIN MessageToInteraction mti ON i.Id = mti.InteractionId WHERE mti.MessageUuid = m.Uuid AND i.Id = 2) AS SupportCount
             , (SELECT COUNT(i.Id) FROM Interaction i JOIN MessageToInteraction mti ON i.Id = mti.InteractionId WHERE mti.MessageUuid = m.Uuid AND i.Id = 3) AS LoveCount
@@ -83,6 +85,30 @@ func (dbh DatabaseHandler) GetMessages(w http.ResponseWriter, req *http.Request)
 
     w.Header().Set("Content-Type", "application/json")
     fmt.Fprint(w, string(messagesJson))
+}
+
+func (dbh DatabaseHandler) PostMessages(w http.ResponseWriter, req *http.Request) {
+    var messages []struct {
+        Title   string
+        Body    string
+    }
+
+    err := json.NewDecoder(req.Body).Decode(&messages)
+    if err != nil {
+        log.Fatal(err)
+    }
+
+    log.Printf("*** DEBUG: POSTing with data %+v\n", messages)
+
+    db, err := sql.Open("sqlite3", dbh.DBPath)
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer db.Close()
+
+    _, err = db.Exec("INSERT INTO Message (Uuid, Title, Body) VALUES ( ?, ?, ? );", uuid.NewString(), messages[0].Title, messages[0].Body)
+
+    dbh.GetMessages(w, req)
 }
 
 // ##################

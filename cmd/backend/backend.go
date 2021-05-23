@@ -27,6 +27,7 @@ func main() {
     router.HandleFunc("/", handler.GetDefault).Methods("GET")
     apiRouter := router.PathPrefix(apiPrefix).Subrouter()
     apiRouter.HandleFunc("/messages", dbh.GetMessages).Methods("GET")
+    apiRouter.HandleFunc("/messages", dbh.PostMessages).Methods("POST")
     apiRouter.HandleFunc("/tags", dbh.GetTags).Methods("GET")
     apiRouter.HandleFunc("/tags", dbh.PostTags).Methods("POST")
     apiRouter.Use(headersMiddleware)
