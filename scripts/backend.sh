@@ -34,11 +34,11 @@ CREATE TABLE IF NOT EXISTS Interaction (
 );
 
 CREATE TABLE IF NOT EXISTS MessageToInteraction (
+    Id INTEGER PRIMARY KEY,
     MessageUuid TEXT NOT NULL,
     InteractionId INTEGER NOT NULL,
     Created_at INTEGER(4) NOT NULL DEFAULT (strftime('%s', 'now')),
     Deleted_at INTEGER(4) NULL,
-    PRIMARY KEY (MessageUuid, InteractionId),
     FOREIGN KEY (MessageUuid) REFERENCES Message (Uuid),
     FOREIGN KEY (InteractionId) REFERENCES Interaction (Id)
 );

@@ -37,23 +37,27 @@ func (dbh DatabaseHandler) GetMessages(w http.ResponseWriter, req *http.Request)
     defer db.Close()
 
     rows, err := db.Query(`
-    SELECT 
-        m.Uuid
-        , m.Title
-        , m.Body
-        , m.Created_at
-        , GROUP_CONCAT(t.Name) AS TagsList
-    FROM
-        Message m
-    JOIN
-        MessageToTag mtt ON m.Uuid = mtt.MessageUuid
-    JOIN
-        Tag t ON mtt.TagId = t.Id
-    WHERE 
-        m.deleted_at IS NULL AND t.deleted_at IS NULL
-    GROUP BY
-        m.Uuid
-    ;`)
+        SELECT 
+            m.Uuid
+            , m.Title
+            , m.Body
+            , m.Created_at
+            , GROUP_CONCAT(t.Name) AS TagsList
+            , (SELECT COUNT(i.Id) FROM Interaction i JOIN MessageToInteraction mti ON i.Id = mti.InteractionId WHERE mti.MessageUuid = m.Uuid AND i.Id = 1) AS LikeCount
+            , (SELECT COUNT(i.Id) FROM Interaction i JOIN MessageToInteraction mti ON i.Id = mti.InteractionId WHERE mti.MessageUuid = m.Uuid AND i.Id = 2) AS SupportCount
+            , (SELECT COUNT(i.Id) FROM Interaction i JOIN MessageToInteraction mti ON i.Id = mti.InteractionId WHERE mti.MessageUuid = m.Uuid AND i.Id = 3) AS LoveCount
+            , (SELECT COUNT(i.Id) FROM Interaction i JOIN MessageToInteraction mti ON i.Id = mti.InteractionId WHERE mti.MessageUuid = m.Uuid AND i.Id = 4) AS InteractionCount
+        FROM
+            Message m
+        JOIN
+            MessageToTag mtt ON m.Uuid = mtt.MessageUuid
+        JOIN
+            Tag t ON mtt.TagId = t.Id
+        WHERE 
+            m.deleted_at IS NULL AND t.deleted_at IS NULL
+        GROUP BY
+            m.Uuid;
+    `)
     if err != nil {
         log.Fatal(err)
     }
@@ -63,7 +67,7 @@ func (dbh DatabaseHandler) GetMessages(w http.ResponseWriter, req *http.Request)
         var message MessageRow
         var tagsList string
 
-        err = rows.Scan(&message.UUID, &message.Title, &message.Body, &message.CreatedAt, &tagsList)
+        err = rows.Scan(&message.UUID, &message.Title, &message.Body, &message.CreatedAt, &tagsList, &message.LikeCount, &message.SupportCount, &message.LoveCount, &message.InteractionCount)
         if err != nil {
             log.Fatal(err)
         }
