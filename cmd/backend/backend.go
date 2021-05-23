@@ -11,7 +11,7 @@ import (
 )
 
 func main() {
-    mh := handler.MessageHandler {
+    dbh := handler.DatabaseHandler {
         "assets/backend.db",
     } 
 
@@ -20,7 +20,8 @@ func main() {
     apiRouter := router.PathPrefix(apiPrefix).Subrouter()
 
     apiRouter.HandleFunc("/", handler.GetDefault).Methods("GET")
-    apiRouter.HandleFunc("/message", mh.GetMessage).Methods("GET")
+    apiRouter.HandleFunc("/messages", dbh.GetMessages).Methods("GET")
+    apiRouter.HandleFunc("/tags", dbh.GetTags).Methods("GET")
 
     http.Handle("/", apiRouter)
 

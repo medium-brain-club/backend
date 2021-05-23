@@ -1,0 +1,15 @@
+INSERT INTO Tag (Name) VALUES ('ADHD');
+INSERT INTO Tag (Name) VALUES('Anxiety');
+INSERT INTO Tag (Name) VALUES('Autism');
+INSERT INTO Tag (Name) VALUES ('Bipolar Disorder');
+INSERT INTO Tag (Name) VALUES('Coping Skills') ; 
+INSERT INTO Tag (Name) VALUES('Depression');
+INSERT INTO Tag (Name) VALUES('Disability');
+INSERT INTO Tag (Name) VALUES ('Divorce');
+INSERT INTO Tag (Name) VALUES ('Dyslexia');
+INSERT INTO Tag (Name) VALUES('Eating Disorders');
+INSERT INTO Tag (Name) VALUES('Grief and Loss');
+INSERT INTO Tag (Name) VALUES ('LGBTQ+ Self-Care');
+INSERT INTO Tag (Name) VALUES ('Mental Health Awareness Month');
+INSERT INTO Tag (Name) VALUES ('Mental Illness') ; 
+INSERT INTO Tag (Name) VALUES('Mindfulness'); 
