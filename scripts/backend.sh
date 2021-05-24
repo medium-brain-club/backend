@@ -48,6 +48,7 @@ CREATE VIEW IF NOT EXISTS v_FE_Message (
     Title,
     Body,
     Created_at,
+    Deleted_at,
     TagsList,
     LikeCount,
     SupportCount,
@@ -60,6 +61,7 @@ AS
         , m.Title
         , m.Body
         , m.Created_at
+        , m.Deleted_at
         , COALESCE(tt.TagsList, '') AS TagsList
         , COALESCE(ii.LikeCount, 0) AS LikeCount
         , COALESCE(ii.SupportCount, 0) AS SupportCount
@@ -86,13 +88,12 @@ AS
                 , SUM(CASE WHEN i.Id = 1 THEN 1 ELSE 0 END) AS LikeCount
                 , SUM(CASE WHEN i.Id = 2 THEN 1 ELSE 0 END) AS SupportCount
                 , SUM(CASE WHEN i.Id = 3 THEN 1 ELSE 0 END) AS LoveCount
-                , SUM(CASE WHEN i.Id = 4 THEN 1 ELSE 0 END) AS InteractionCount
+                , COUNT(*) AS InteractionCount
             FROM
                 MessageToInteraction mti
             JOIN
                 Interaction i ON mti.InteractionId = i.Id AND mti.deleted_at IS NULL AND i.deleted_at IS NULL
             GROUP BY MessageUuid
         ) ii ON m.Uuid = ii.MessageUuid
-    WHERE 
-        m.deleted_at IS NULL;
+;
 eof

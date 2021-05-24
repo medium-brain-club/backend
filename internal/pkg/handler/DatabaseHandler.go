@@ -38,22 +38,7 @@ func (dbh DatabaseHandler) GetMessages(w http.ResponseWriter, req *http.Request)
     }
     defer db.Close()
 
-    rows, err := db.Query(`
-        SELECT 
-            m.Uuid
-            , m.Title
-            , m.Body
-            , m.Created_at
-            , COALESCE((SELECT GROUP_CONCAT(t.Name) FROM Tag t JOIN MessageToTag mtt ON t.Id = mtt.TagId WHERE mtt.MessageUuid = m.Uuid), '') AS TagsList
-            , (SELECT COUNT(i.Id) FROM Interaction i JOIN MessageToInteraction mti ON i.Id = mti.InteractionId WHERE mti.MessageUuid = m.Uuid AND i.Id = 1) AS LikeCount
-            , (SELECT COUNT(i.Id) FROM Interaction i JOIN MessageToInteraction mti ON i.Id = mti.InteractionId WHERE mti.MessageUuid = m.Uuid AND i.Id = 2) AS SupportCount
-            , (SELECT COUNT(i.Id) FROM Interaction i JOIN MessageToInteraction mti ON i.Id = mti.InteractionId WHERE mti.MessageUuid = m.Uuid AND i.Id = 3) AS LoveCount
-            , (SELECT COUNT(i.Id) FROM Interaction i JOIN MessageToInteraction mti ON i.Id = mti.InteractionId WHERE mti.MessageUuid = m.Uuid AND i.Id = 4) AS InteractionCount
-        FROM
-            Message m
-        WHERE 
-            m.deleted_at IS NULL
-    `)
+    rows, err := db.Query("SELECT Uuid, Title, Body, Created_at, TagsList, LikeCount, SupportCount, LoveCount, InteractionCount FROM v_FE_Message m WHERE m.Deleted_at IS NULL")
     if err != nil {
         log.Fatal(err)
     }
