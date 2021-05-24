@@ -25,10 +25,8 @@ services:
     # avoid the bug.
     image: adminer:4.7.9
     volumes:
-      - ../assets/backend.db:/var/lib/backend.db:rw
+      - ../assets/backend.db:/var/www/html/backend.db:rw
       - ./login-password-less.php:/var/www/html/plugins-enabled/login-password-less.php:ro
-        # environment:
-      # - ADMINER_PLUGINS=login-password-less
     ports:
       - "8081:8080"
 

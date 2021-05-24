@@ -42,4 +42,57 @@ CREATE TABLE IF NOT EXISTS MessageToInteraction (
     FOREIGN KEY (MessageUuid) REFERENCES Message (Uuid),
     FOREIGN KEY (InteractionId) REFERENCES Interaction (Id)
 );
+
+CREATE VIEW IF NOT EXISTS v_FE_Message (
+    Uuid,
+    Title,
+    Body,
+    Created_at,
+    TagsList,
+    LikeCount,
+    SupportCount,
+    LoveCount,
+    InteractionCount
+)
+AS
+    SELECT 
+        m.Uuid
+        , m.Title
+        , m.Body
+        , m.Created_at
+        , COALESCE(tt.TagsList, '') AS TagsList
+        , COALESCE(ii.LikeCount, 0) AS LikeCount
+        , COALESCE(ii.SupportCount, 0) AS SupportCount
+        , COALESCE(ii.LoveCount, 0) AS LoveCount
+        , COALESCE(ii.InteractionCount, 0) AS InteractionCount
+    FROM
+        Message m
+    LEFT OUTER JOIN
+        (
+            SELECT
+                MessageUuid
+                , GROUP_CONCAT(Name) AS TagsList
+            FROM
+                MessageToTag mtt
+            JOIN
+                Tag t ON mtt.TagId = t.Id AND mtt.deleted_at IS NULL AND t.deleted_at IS NULL
+            GROUP BY MessageUuid
+        ) tt on m.Uuid = tt.MessageUuid
+    LEFT OUTER JOIN
+        (
+            SELECT
+                MessageUuid
+                , i.Id
+                , SUM(CASE WHEN i.Id = 1 THEN 1 ELSE 0 END) AS LikeCount
+                , SUM(CASE WHEN i.Id = 2 THEN 1 ELSE 0 END) AS SupportCount
+                , SUM(CASE WHEN i.Id = 3 THEN 1 ELSE 0 END) AS LoveCount
+                , SUM(CASE WHEN i.Id = 4 THEN 1 ELSE 0 END) AS InteractionCount
+            FROM
+                MessageToInteraction mti
+            JOIN
+                Interaction i ON mti.InteractionId = i.Id AND mti.deleted_at IS NULL AND i.deleted_at IS NULL
+            GROUP BY MessageUuid
+        ) ii ON m.Uuid = ii.MessageUuid
+    WHERE 
+        m.deleted_at IS NULL;
 eof
