@@ -18,8 +18,21 @@ services:
       - LETSENCRYPT_EMAIL=webmaster@byteporter.com
     entrypoint: ["/bin/backend"]
     restart: always
+  adminer:
+    # Adminer 4.8.0 shows an error with SQLite3 db files. This is fixed in
+    # version 4.8.1 but at the time I'm writing this stack, 4.8.0 is the
+    # newest version of the docker image. Rolled back to previous version to
+    # avoid the bug.
+    image: adminer:4.7.9
+    volumes:
+      - ../assets/backend.db:/var/lib/backend.db:rw
+      - ./login-password-less.php:/var/www/html/plugins-enabled/login-password-less.php:ro
+        # environment:
+      # - ADMINER_PLUGINS=login-password-less
+    ports:
+      - "8081:8080"
 
 networks:
   net:
-    external:
-      name: docker-reverse-proxy_net
+    #     external:
+    #       name: docker-reverse-proxy_net
