@@ -20,7 +20,6 @@ steps:
       repo: fart-butt-wang/backend
       dockerfile: build/package/docker/backend/Dockerfile
       registry: docker.byteporter.com
-      dry_run: true
 
 image_pull_secrets:
   - dockerconfigjson
