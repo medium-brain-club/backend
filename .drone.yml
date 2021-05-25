@@ -22,6 +22,9 @@ steps:
       repo: docker.byteporter.com/good-brain-thinkins/backend
       dockerfile: build/package/docker/backend/Dockerfile
       registry: docker.byteporter.com
+    when:
+      event:
+        - tag
 
 image_pull_secrets:
   - dockerconfigjson
@@ -29,5 +32,7 @@ image_pull_secrets:
 trigger:
   event:
     - push
+    - tag
   branch:
     - master
+
