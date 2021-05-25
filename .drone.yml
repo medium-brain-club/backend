@@ -16,7 +16,7 @@ steps:
         from_secret: DOCKER_USERNAME
       password:
         from_secret: DOCKER_PASSWORD
-      auto_tag: true
+      tags: faaaaaart
       repo: fart-butt-wang/backend
       dockerfile: build/package/docker/backend/Dockerfile
       registry: docker.byteporter.com
