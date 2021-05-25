@@ -19,7 +19,7 @@ steps:
       auto_tag: true
       repo: docker.byteporter.com/good-brain-thinkins/backend
       dockerfile: build/package/docker/backend/Dockerfile
-        # registry: docker.byteporter.com
+      registry: docker.byteporter.com
 
 image_pull_secrets:
   - dockerconfigjson
