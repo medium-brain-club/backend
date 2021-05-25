@@ -11,6 +11,10 @@ Drone-CI already, and have a personal preference for controlling my own tools wh
 This repository is mirrored on GitHub to provide the public with a more familiar way to interact and also
 for integration with the rest of the team's effort. The mirror is available at <https://github.com/medium-brain-club/backend>.
 
+## Tags
+
+- v1.0 - Code as submitted at end of hackathon.
+
 ## Resources
 
 - /api/tags
