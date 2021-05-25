@@ -18,4 +18,6 @@ VOLUME /var/lib/backend/assets
 
 EXPOSE 8080
 
+WORKDIR /var/lib/backend
+
 ENTRYPOINT ["./backend"]
