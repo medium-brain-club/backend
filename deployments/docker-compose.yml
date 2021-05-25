@@ -6,7 +6,7 @@ services:
     volumes:
       - ../backend:/usr/share/backend/backend:ro
       - ../assets/backend.db:/usr/share/backend/assets/backend.db:rw
-      - ../web:/usr/share/backebd/web:ro
+      - ../web:/usr/share/backend/web:ro
     networks:
       - net
     expose:

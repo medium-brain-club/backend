@@ -20,7 +20,7 @@ func headersMiddleware(next http.Handler) http.Handler {
 func main() {
     dbh := handler.DatabaseHandler {
         "assets/backend.db",
-    } 
+    }
 
     apiPrefix := "/api"
     router := mux.NewRouter()

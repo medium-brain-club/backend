@@ -15,3 +15,4 @@ backend: cmd/backend/backend.go $(shell find . -name '*.go')
 
 assets/%.db: scripts/%.sh
 	$(SHELL) $< $@
+
