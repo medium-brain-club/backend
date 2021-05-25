@@ -17,6 +17,8 @@ steps:
       password:
         from_secret: DOCKER_PASSWORD
       auto_tag: true
+      # custom registry MUST be repeated here or it tries to use
+      # docker.io as the registry
       repo: docker.byteporter.com/good-brain-thinkins/backend
       dockerfile: build/package/docker/backend/Dockerfile
       registry: docker.byteporter.com
