@@ -11,7 +11,7 @@ RUN echo "en_US.UTF-8 UTF-8" > /etc/locale.gen && \
 RUN apt-get install -y sqlite3
 
 ADD backend /bin/backend
-ADD web /var/lib/backend/
+ADD web/* /var/lib/backend/web/
 ADD assets/backend.db /var/lib/backend/assets/backend.db
 
 VOLUME /var/lib/backend/assets
