@@ -2,7 +2,7 @@ version: '3.4'
 
 services:
   httpd:
-    image: docker.byteporter.com/good-brain-thinkins/backend
+    image: docker.byteporter.com/good-brain-thinkins/backend:1
     expose:
       - "8080"
     entrypoint: ["/bin/backend"]
