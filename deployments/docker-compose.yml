@@ -7,6 +7,8 @@ services:
       - "8080"
     entrypoint: ["/bin/backend"]
     restart: always
+    networks:
+      - net
 
   adminer:
     # Adminer 4.8.0 shows an error with SQLite3 db files. This is fixed in
@@ -17,6 +19,9 @@ services:
     volumes:
       - ../assets/backend.db:/var/www/html/backend.db:rw
       - ./login-password-less.php:/var/www/html/plugins-enabled/login-password-less.php:ro
-    ports:
-      - "8081:8080"
+    networks:
+      - net
+
+networks:
+  net:
 

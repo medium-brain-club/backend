@@ -1,14 +1,12 @@
 version: '3.4'
 
 services:
-  backend:
+  httpd:
     environment:
       - VIRTUAL_HOST=backend.byteporter.com
       - VIRTUAL_PORT=8080
       - LETSENCRYPT_HOST=backend.byteporter.com
       - LETSENCRYPT_EMAIL=webmaster@byteporter.com
-    networks:
-      - net
 
 networks:
   net:
