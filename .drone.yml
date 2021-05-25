@@ -17,9 +17,9 @@ steps:
       password:
         from_secret: DOCKER_PASSWORD
       auto_tag: true
-      registry: docker.byteporter.com
       repo: good-brain-thinkins/backend
       dockerfile: build/package/docker/backend/Dockerfile
+      registry: docker.byteporter.com
 
 image_pull_secrets:
   - dockerconfigjson
