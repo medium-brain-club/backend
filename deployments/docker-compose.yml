@@ -2,22 +2,12 @@ version: '3.4'
 
 services:
   httpd:
-    image: nouchka/sqlite3
-    volumes:
-      - ../backend:/usr/share/backend/backend:ro
-      - ../assets/backend.db:/usr/share/backend/assets/backend.db:rw
-      - ../web:/usr/share/backend/web:ro
-    networks:
-      - net
+    image: docker.byteporter.com/good-brain-thinkins/backend
     expose:
       - "8080"
-    environment:
-      - VIRTUAL_HOST=backend.byteporter.com
-      - VIRTUAL_PORT=8080
-      - LETSENCRYPT_HOST=backend.byteporter.com
-      - LETSENCRYPT_EMAIL=webmaster@byteporter.com
     entrypoint: ["/bin/backend"]
     restart: always
+
   adminer:
     # Adminer 4.8.0 shows an error with SQLite3 db files. This is fixed in
     # version 4.8.1 but at the time I'm writing this stack, 4.8.0 is the
@@ -30,7 +20,3 @@ services:
     ports:
       - "8081:8080"
 
-networks:
-  net:
-    #     external:
-    #       name: docker-reverse-proxy_net
